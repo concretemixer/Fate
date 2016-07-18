@@ -17,7 +17,9 @@ namespace Fate {
 		public Camera startCamera;
 		public Camera gameCamera;
 		public Camera sideCamera;
-		public GameObject hero;
+        public Camera shopCamera;
+
+        public GameObject hero;
 		public GameObject truck;
 		// Use this for initialization
 		float lifetime = 0;
@@ -63,7 +65,17 @@ namespace Fate {
 				gameCamera.gameObject.SetActive (true);
 				sideCamera.gameObject.SetActive (false);
 			}
+            if (name == "ZoneShopExit")
+            {
+                gameCamera.gameObject.SetActive(true);
+                shopCamera.gameObject.SetActive(false);
 
+                hero.GetComponent<NavMeshAgent>().enabled = false;
+                hero.transform.position = GameObject.Find("ShopExitStart").transform.position;
+                hero.GetComponent<NavMeshAgent>().enabled = true;
+                hero.GetComponent<NavMeshAgent>().destination = GameObject.Find("ShopExitFinish").transform.position;     
+
+            }
 		}
 
 		GameObject fuelGuy;
@@ -102,7 +114,41 @@ namespace Fate {
 					Invoke ("FuelGuyGo", 0.5f);
 				}
 			}
-			if (obj.name == "WallBox") {
+            if (obj.name == "Dumpster")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.dumpster_look", 2));
+                }
+                if (action == Interactable.Action.Use)
+                {
+                    SayToSelf(locale.GetRandomText("intro.dumpster_use", 2));
+                }
+            }
+            if (obj.name == "FuelStation")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    if (!truckFueled)
+                        SayToSelf(locale.GetText("intro.shop_look"));
+                    else if (!fuelPaid)
+                        SayToSelf(locale.GetText("intro.shop_look_pay"));
+                    else
+                        SayToSelf(locale.GetText("intro.shop_look_leave"));
+                }
+                if (action == Interactable.Action.Enter)
+                {
+                    shopCamera.gameObject.SetActive(true);
+                    gameCamera.gameObject.SetActive(false);
+
+                    hero.GetComponent<NavMeshAgent>().enabled = false;
+                    hero.transform.position = GameObject.Find("ShopEnterStart").transform.position;
+                    hero.GetComponent<NavMeshAgent>().enabled = true;
+                    hero.GetComponent<NavMeshAgent>().destination = GameObject.Find("ShopEnterFinish").transform.position;     
+                }
+            }
+            if (obj.name == "WallBox")
+            {
 				if (action == Interactable.Action.Look) {
 					SayToSelf (locale.GetRandomText ("intro.box_look",2));
 				}				
@@ -125,6 +171,25 @@ namespace Fate {
 					state = State.Death;
 				}
 			}
+            if (obj.name == "Diesel")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.diesel_look", 2));
+                }
+            }
+            if (obj.name == "CounterGirl")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.girl_look", 3));
+                }
+                if (action == Interactable.Action.Talk)
+                {
+                    Say(locale.GetText("intro.girl_talk"));
+                }
+
+            }
 		}
 
 		void FuelGuyGo()

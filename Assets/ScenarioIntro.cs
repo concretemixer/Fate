@@ -8,10 +8,7 @@ namespace Fate {
 
 		bool truckFueled = false;
 		bool fuelPaid = false;
-
-		public  GameObject textPanel;
-		public  GameObject responsePanel;
-
+	
 
 
 		public Camera startCamera;
@@ -94,6 +91,16 @@ namespace Fate {
 					else if (!fuelPaid) {
 						SayToSelf (locale.GetText ("intro.truck.pay_first"));
 					}
+					else {
+						SayToSelf (locale.GetText ("intro.truck.go"));
+						startCamera.gameObject.SetActive(true);
+						gameCamera.gameObject.SetActive (false);
+						state = State.Outro;
+						hero.SetActive (false);
+						hero.GetComponent<Hero> ().Deselect ();
+
+						truck.GetComponent<Animation> ().Play ("leave_gas_station");
+					}
 				}
 			}
 			if (obj.name == "FuelPumps") {
@@ -144,7 +151,12 @@ namespace Fate {
                     hero.GetComponent<NavMeshAgent>().enabled = false;
                     hero.transform.position = GameObject.Find("ShopEnterStart").transform.position;
                     hero.GetComponent<NavMeshAgent>().enabled = true;
-                    hero.GetComponent<NavMeshAgent>().destination = GameObject.Find("ShopEnterFinish").transform.position;     
+                    hero.GetComponent<NavMeshAgent>().destination = GameObject.Find("ShopEnterFinish").transform.position;    
+
+					if (fuelGuy != null) {
+						fuelGuy.GetComponent<Animator> ().SetFloat ("Speed_f", 0.0f);
+						fuelGuy.GetComponent<Animator> ().SetFloat ("Anim_Speed_f", 0.5f);
+					}
                 }
             }
             if (obj.name == "WallBox")
@@ -189,12 +201,22 @@ namespace Fate {
                     Say(locale.GetText("intro.girl_talk"));
                 }
 
+				if (action == Interactable.Action.Use) {
+					if (!truckFueled)
+						Response (locale.GetText ("intro.girl_answer"));
+					else if (!fuelPaid) {
+						Response (locale.GetText ("intro.girl_pay"));
+						fuelPaid = true;
+					}
+					else
+						Response (locale.GetText ("intro.girl_else"));
+				}
             }
 		}
 
 		void FuelGuyGo()
 		{
-			Response ("Ok!");
+			Response (locale.GetText ("intro.fuel_guy_talk_ok"));
 			foreach (var m in fuelGuy.transform.gameObject.GetComponentsInChildren<MeshRenderer>()) {
 				if (m.gameObject.tag == "Selection") {
 					m.enabled = false;
@@ -210,45 +232,6 @@ namespace Fate {
 			truckFueled = true;
 		}
 
-		void HideTextPanel()
-		{
-			textPanel.SetActive (false);
-		}
-
-		void HideResponsePanel()
-		{
-			responsePanel.SetActive (false);
-		}
-
-		void SayToSelf(string s)
-		{
-			if (textPanel.activeSelf) {
-				CancelInvoke ();
-			}
-			textPanel.SetActive (true);
-			textPanel.GetComponentInChildren<Text>().text = "<color=#ffffff>"+s+"</color>";
-			Invoke ("HideTextPanel", 5);
-		}
-
-		void Say(string s)
-		{
-			if (textPanel.activeSelf) {
-				CancelInvoke ();
-			}
-			textPanel.SetActive (true);
-			textPanel.GetComponentInChildren<Text>().text = "<color=#ffff00>"+s+"</color>";
-			Invoke ("HideTextPanel", 5);
-		}
-
-		void Response(string s)
-		{
-			if (responsePanel.activeSelf) {
-				CancelInvoke ();
-			}
-			responsePanel.SetActive (true);
-			responsePanel.GetComponentInChildren<Text>().text = "<color=#ffbb00>"+s+"</color>";
-			Invoke ("HideResponsePanel", 5);
-		}
 
 	}
 

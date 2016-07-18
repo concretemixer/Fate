@@ -24,6 +24,13 @@ namespace Fate {
 
 		int shotNum = 0;
 
+		public void Deselect()
+		{
+			foreach (var go in GameObject.FindGameObjectsWithTag ("Selection")) {
+				go.GetComponent<MeshRenderer> ().enabled = false;
+			}			
+		}
+
 		Vector3 touchGround;
 		// Update is called once per frame
 		void Update () {

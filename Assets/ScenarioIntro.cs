@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 namespace Fate {
@@ -49,7 +50,13 @@ namespace Fate {
 				break;
 			case State.Playing:
 				break;
-			}
+            case State.Outro:
+                if (lifetime > 4)
+                {
+                    SceneManager.LoadScene("EastGate");
+                }
+                break;
+            }
 		}
 
 		public override void OnHeroEnterZone(string name) 
@@ -90,7 +97,7 @@ namespace Fate {
 
 		public override void OnAction(Interactable.Action action, GameObject obj)
 		{
-			Debug.Log ("doing " + action.ToString() + " on "+ obj.name);			
+			//Debug.Log ("doing " + action.ToString() + " on "+ obj.name);			
 			if (obj.name == "Truck") {
 				if (action == Interactable.Action.Look) {
 					SayToSelf (locale.GetRandomText("intro.my_truck",3));
@@ -111,6 +118,7 @@ namespace Fate {
 						hero.GetComponent<Hero> ().Deselect ();
 
 						truck.GetComponent<Animation> ().Play ("leave_gas_station");
+                        lifetime = 0;
 					}
 				}
 			}

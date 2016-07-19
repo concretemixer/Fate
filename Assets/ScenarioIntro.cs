@@ -73,6 +73,17 @@ namespace Fate {
                 hero.GetComponent<NavMeshAgent>().destination = GameObject.Find("ShopExitFinish").transform.position;     
 
             }
+            if (name == "ZoneTruckKill")
+            {
+                GameObject.Find("DeathTruck").GetComponent<Animation>().Play();
+            }
+            if (name == "DeathTruck")
+            {
+                //hero.GetComponent<Animator>().SetBool("Death_b",true);
+                hero.SetActive(false);
+                GameObject.Find("BloodSpill").transform.position = hero.transform.position;
+                GameObject.Find("BloodSpill").GetComponentInChildren<ParticleSystem>().Play();
+            }
 		}
 
 		GameObject fuelGuy;

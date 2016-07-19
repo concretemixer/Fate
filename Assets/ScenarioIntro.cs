@@ -16,6 +16,7 @@ namespace Fate {
 		public Camera gameCamera;
 		public Camera sideCamera;
         public Camera shopCamera;
+		public Camera shopSecurityCamera;
 
         public GameObject hero;
 		public GameObject truck;
@@ -120,6 +121,15 @@ namespace Fate {
 						truck.GetComponent<Animation> ().Play ("leave_gas_station");
                         lifetime = 0;
 					}
+				}
+			}
+			if (obj.name == "SecurityMonitor") {
+				if (action == Interactable.Action.Look) {
+					SayToSelf (locale.GetRandomText ("intro.sec_look", 2));
+				}
+				if (action == Interactable.Action.LookClose) {
+					shopCamera.gameObject.SetActive(false);
+					shopSecurityCamera.gameObject.SetActive (true);
 				}
 			}
 			if (obj.name == "FuelPumps") {

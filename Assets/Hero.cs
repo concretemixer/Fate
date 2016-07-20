@@ -86,10 +86,11 @@ namespace Fate {
 						}					
 						foreach (var m in hit.transform.gameObject.GetComponentsInChildren<MeshRenderer>()) {
 							if (m.gameObject.tag == "Selection") {
-								m.enabled = true;
-								selected = hit.transform.gameObject;
+								m.enabled = true;								
 							}
 						}
+
+                        selected = hit.transform.gameObject;
 
 						foreach (Transform child in hit.transform) {
 							if (child.gameObject.tag == "Respawn") {
@@ -129,29 +130,39 @@ namespace Fate {
 				}
 
 				if (selected != null) {
-					
-					actionsPanel.SetActive (true);
 
-					Vector3 menuPos = selected.transform.position;
-					foreach (Transform child in selected.transform) {
-						if (child.gameObject.tag == "MenuPoint") {
-							menuPos = child.transform.position;
-						}
-					}
+                    if (selected.GetComponent<Interactable>().defaultAction != Interactable.Action.None)
+                    {
+                        actionsPanel.SetActive(false);
+                        OnActionSelected(selected.GetComponent<Interactable>().defaultAction);
+                    }
+                    else
+                    {
+                        actionsPanel.SetActive(true);
 
-					Vector3 screenPos = camera.WorldToScreenPoint (menuPos);
-					actionsPanel.GetComponent<RectTransform> ().anchoredPosition = screenPos;
+                        Vector3 menuPos = selected.transform.position;
+                        foreach (Transform child in selected.transform)
+                        {
+                            if (child.gameObject.tag == "MenuPoint")
+                            {
+                                menuPos = child.transform.position;
+                            }
+                        }
 
-					Interactable.Action[] acts = selected.GetComponent<Interactable> ().Actions;
-					int i = 0;
-					foreach (Button b in actionsPanel.GetComponentsInChildren<Button>(true)) {
-						b.gameObject.SetActive (i < acts.Length);
-						if (i < acts.Length)
-							b.GetComponentInChildren<Text> ().text = acts [i].ToString ();
-						i++;
-					}
-					actionsPanel.GetComponent<RectTransform> ().SetSizeWithCurrentAnchors (RectTransform.Axis.Vertical, acts.Length * 40 + 20);
+                        Vector3 screenPos = camera.WorldToScreenPoint(menuPos);
+                        actionsPanel.GetComponent<RectTransform>().anchoredPosition = screenPos;
 
+                        Interactable.Action[] acts = selected.GetComponent<Interactable>().Actions;
+                        int i = 0;
+                        foreach (Button b in actionsPanel.GetComponentsInChildren<Button>(true))
+                        {
+                            b.gameObject.SetActive(i < acts.Length);
+                            if (i < acts.Length)
+                                b.GetComponentInChildren<Text>().text = acts[i].ToString();
+                            i++;
+                        }
+                        actionsPanel.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, acts.Length * 40 + 20);
+                    }
 				} else {
 					actionsPanel.SetActive (false);
 				}
@@ -169,23 +180,33 @@ namespace Fate {
 			scenario.OnHeroEnterZone (other.gameObject.name);
 		}
 
+
+        public void OnActionSelected(Interactable.Action act)
+        {            
+            Debug.Log("intended " + act.ToString() + " on " + selected.name);
+            actionsPanel.SetActive(false);
+
+            GetComponent<NavMeshAgent>().destination = transform.position;
+
+            foreach (Transform child in selected.transform)
+            {
+                if (child.gameObject.tag == "Respawn")
+                {
+                    if (act != Interactable.Action.Look)
+                        GetComponent<NavMeshAgent>().destination = child.transform.position;
+                }
+            }
+
+            float d = (GetComponent<NavMeshAgent>().destination - transform.position).magnitude;
+            GetComponent<NavMeshAgent>().speed = d > 10 ? 5 : 2;
+            intendedAction = act;
+
+        }
+
 		public void OnActionSelected(int idx)
 		{
 			Interactable.Action[] acts = selected.GetComponent<Interactable> ().Actions;
-			Debug.Log ("intended " + acts[idx].ToString() + " on "+ selected.name);
-			actionsPanel.SetActive (false);
-
-			foreach (Transform child in selected.transform) {
-				if (child.gameObject.tag == "Respawn") {					
-					if (acts [idx] == Interactable.Action.Look)
-						GetComponent<NavMeshAgent> ().destination = transform.position;
-					else						
-						GetComponent<NavMeshAgent> ().destination = child.transform.position;
-					float d = (GetComponent<NavMeshAgent> ().destination - transform.position).magnitude;
-					GetComponent<NavMeshAgent> ().speed = d > 10 ? 5 : 2;
-					intendedAction = acts [idx];
-				}
-			}
+            OnActionSelected( acts[idx]);		
 		}
 	}
 

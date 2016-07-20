@@ -8,7 +8,9 @@ namespace Fate {
 	public class ScenarioIntro : Scenario {
 
 		bool truckFueled = false;
+        bool pinKnown = false;
 		bool fuelPaid = false;
+        bool bikerLeft = false;
 	
 
 
@@ -17,6 +19,7 @@ namespace Fate {
 		public Camera sideCamera;
         public Camera shopCamera;
 		public Camera shopSecurityCamera;
+        public Camera shopPinCamera;
 
         public GameObject hero;
 		public GameObject truck;
@@ -78,7 +81,13 @@ namespace Fate {
                 hero.GetComponent<NavMeshAgent>().enabled = false;
                 hero.transform.position = GameObject.Find("ShopExitStart").transform.position;
                 hero.GetComponent<NavMeshAgent>().enabled = true;
-                hero.GetComponent<NavMeshAgent>().destination = GameObject.Find("ShopExitFinish").transform.position;     
+                hero.GetComponent<NavMeshAgent>().destination = GameObject.Find("ShopExitFinish").transform.position;
+
+                if (truckFueled)
+                {
+                    GameObject.Find("Motorbike").GetComponent<Animation>().Play();
+                    bikerLeft = true;
+                }
 
             }
             if (name == "ZoneTruckKill")
@@ -95,10 +104,34 @@ namespace Fate {
 		}
 
 		GameObject fuelGuy;
+        string pinCode;
 
 		public override void OnAction(Interactable.Action action, GameObject obj)
 		{
 			//Debug.Log ("doing " + action.ToString() + " on "+ obj.name);			
+            if (obj.name.StartsWith("Pin_") && shopPinCamera.isActiveAndEnabled)
+            {
+                string digit = obj.name.Replace("Pin_","")+"... ";
+                pinCode += digit;
+                SayToSelf(pinCode);
+                string pin = pinCode.Replace(".","").Replace(" ", "");
+
+                if (pin.Length == 4)
+                {
+                    if (pinKnown && pin == "5803")
+                    {
+                        SayToSelf(pinCode + "[Enter]\nYes!!");
+                        fuelPaid = true;
+                    }
+                    else
+                    {
+                        SayToSelf(pinCode + "[Enter]\nNo");
+                    }
+
+                    shopCamera.gameObject.SetActive(true);
+                    shopPinCamera.gameObject.SetActive(false);
+                }
+            }
 			if (obj.name == "Truck") {
 				if (action == Interactable.Action.Look) {
 					SayToSelf (locale.GetRandomText("intro.my_truck",3));
@@ -130,6 +163,8 @@ namespace Fate {
 				if (action == Interactable.Action.LookClose) {
 					shopCamera.gameObject.SetActive(false);
 					shopSecurityCamera.gameObject.SetActive (true);
+                //    shopPinCamera.gameObject.SetActive(true);
+                  //  pinCode = "";
 				}
 			}
 			if (obj.name == "FuelPumps") {
@@ -159,6 +194,32 @@ namespace Fate {
                 if (action == Interactable.Action.Use)
                 {
                     SayToSelf(locale.GetRandomText("intro.dumpster_use", 2));
+                }
+            }
+            if (obj.name == "SecurityCamera")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.camera_look", 2));
+                }
+            }
+            if (obj.name == "FireExtinguisher")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.extinguisher_look", 2));
+                }
+            }
+            
+            if (obj.name == "MonitorWall")
+            {
+                if (action == Interactable.Action.Exit)
+                {
+                    shopCamera.gameObject.SetActive(true);
+                    shopSecurityCamera.gameObject.SetActive(false);
+
+                    if (bikerLeft)
+                        pinKnown = true;
                 }
             }
             if (obj.name == "FuelStation")
@@ -234,8 +295,13 @@ namespace Fate {
 					if (!truckFueled)
 						Response (locale.GetText ("intro.girl_answer"));
 					else if (!fuelPaid) {
-						Response (locale.GetText ("intro.girl_pay"));
-						fuelPaid = true;
+						Response (locale.GetText ("intro.girl_pin"));
+                        shopCamera.gameObject.SetActive(false);
+                        //shopSecurityCamera.gameObject.SetActive(true);
+                        shopPinCamera.gameObject.SetActive(true);
+                        pinCode = "";
+
+//						fuelPaid = true;
 					}
 					else
 						Response (locale.GetText ("intro.girl_else"));

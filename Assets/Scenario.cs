@@ -39,6 +39,10 @@ namespace Fate {
 		
 		}
 
+		public virtual void OnConversationEvent(string name) 
+		{
+		}
+
 		public virtual void OnHeroEnterZone(string name) 
 		{
 		}
@@ -85,6 +89,14 @@ namespace Fate {
 			responsePanel.SetActive (true);
 			responsePanel.GetComponentInChildren<Text>().text = "<color=#ffbb00>"+s+"</color>";
 			Invoke ("HideResponsePanel", 5);
+		}
+
+		public virtual void OnConversationEvent(string id, string name) 
+		{
+		}
+
+		public virtual void OnConversationSelectAnswer(string id, string[] answers) 
+		{
 		}
 
 	}

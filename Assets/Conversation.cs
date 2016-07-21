@@ -6,6 +6,24 @@ namespace Fate
 
     public class Conversation : MonoBehaviour
     {
+		public struct ConversationEntry {
+			public enum EntryType {
+				Start,
+				Text,
+				Choice,
+				Event,
+				End,
+			}
+
+			public string dialogId;
+			public EntryType type;
+			public int  id;
+			public string character;
+			public string data;
+			public int next;						
+			public float pause;						
+		}
+
         public enum State
         {
             Idle,

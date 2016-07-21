@@ -6,6 +6,7 @@ namespace Fate {
 		
 	public class Scenario : MonoBehaviour {
 
+        public Conversation conversation;
 		public  GameObject textPanel;
 		public  GameObject responsePanel;
 

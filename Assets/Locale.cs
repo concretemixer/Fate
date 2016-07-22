@@ -34,11 +34,25 @@ public class Locale {
         {"intro.girl_look.0", "Симпатичная, но какая-то квадратная..."},
         {"intro.girl_look.1", "Похожа на Сашу Грей. Или нет..."},
         {"intro.girl_look.2", "Кассирша. Скучная работа, должно быть."},
-        {"intro.girl_talk", "Девушка, вашей маме зять не нужен?"},
+
+        {"intro.girl_pickup", "- Девушка, как вас зовут?"},
+
+		{"intro.girl_pickup.answer.0", "- Света"},
+		{"intro.girl_pickup.answer.1", "- Маша"},
+		{"intro.girl_pickup.answer.2", "- Лена"},
+
+		{"intro.girl_pickup.0", "- А меня Сигизмунд"},
+		{"intro.girl_pickup.1", "- А меня Мухамед"},
+		{"intro.girl_pickup.2", "- Бонд. Джеймс Бонд."},
+
 		{"intro.girl_answer", "- Там парень на улице, скажите ему, что вам заправить."},
-		{"intro.girl_pay", "- С вас 3499.00. Спасибо, приежайте еще!"},
+		{"intro.girl_pay", "- С вас 3499.00. Можете оплатить карточкой или наличными."},
         {"intro.girl_pin", "- Пин-код, пожалуйста."},
 		{"intro.girl_else", "- Что-то еще, гражданин?"},
+		{"intro.biker_talk.0", "- Сколько жрет, сколько прет?"},
+		{"intro.biker_talk.1", "- Дай прокатиться, бро!"},
+		{"intro.biker_talk.2", "- Давно катаешься? Сколько переломов уже?"},
+		{"intro.biker_fuck_off", "- Отвали!"},
 	};
 
 

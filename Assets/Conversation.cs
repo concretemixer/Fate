@@ -12,6 +12,7 @@ namespace Fate
 				Start,
 				Text,
 				Choice,
+				Random,
 				Event,
 				End,
 			}
@@ -99,6 +100,18 @@ namespace Fate
                                     scenario.OnConversationSelectAnswer(currentDlgId, keys.ToArray());
                                 }
                                 break;
+							case ConversationEntry.EntryType.Random:
+								{
+									List<int> ids = new List<int>();
+									foreach (var _id in e.data.Split(new char[] { '|' }))
+									{
+										int id = int.Parse(_id);
+										ids.Add (id);
+									}
+									
+									nextId = ids[Random.Range(0,ids.Count)];									
+								}
+								break;
                             case ConversationEntry.EntryType.Event:
                                 scenario.OnConversationEvent(currentDlgId, e.data);
                                 break;
@@ -114,7 +127,8 @@ namespace Fate
                         }
                         else
                         {
-                            nextId = e.next;
+							if (e.type != ConversationEntry.EntryType.Random)
+                            	nextId = e.next;
                             timeToNext = e.pause;
                             currentId = e.id;
                         }
@@ -148,6 +162,8 @@ namespace Fate
                     nextId = e.next;
                     state = State.Speaking;
                     timeToNext = e.pause;
+
+
 
                     return;
                 }                    

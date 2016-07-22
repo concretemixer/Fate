@@ -185,6 +185,16 @@ namespace Fate {
 					//Invoke ("FuelGuyGo", 0.5f);
 
                     conversation.StartDialog("intro.fuel_guy.start");
+					state = Scenario.State.Interlude;
+				}
+			}
+			if (obj.name == "Biker") {
+				if (action == Interactable.Action.Look) {
+					SayToSelf (locale.GetRandomText ("intro.biker_look",1));
+				}
+				if (action == Interactable.Action.Talk) {
+					conversation.StartDialog("intro.biker.start");
+					state = Scenario.State.Interlude;
 				}
 			}
             if (obj.name == "Dumpster")
@@ -290,19 +300,27 @@ namespace Fate {
                 }
                 if (action == Interactable.Action.Talk)
                 {
-                    Say(locale.GetText("intro.girl_talk"));
+					conversation.StartDialog("intro.girl.pickup");
+					state = Scenario.State.Interlude;
                 }
 
 				if (action == Interactable.Action.Use) {
 					if (!truckFueled)
-						Response (locale.GetText ("intro.girl_answer"));
+					{
+						conversation.StartDialog("intro.girl.not_fueled");
+						state = Scenario.State.Interlude;
+					}
 					else if (!fuelPaid) {
+
+						conversation.StartDialog("intro.girl.fueled");
+						state = Scenario.State.Interlude;
+/*
 						Response (locale.GetText ("intro.girl_pin"));
                         shopCamera.gameObject.SetActive(false);
                         //shopSecurityCamera.gameObject.SetActive(true);
                         shopPinCamera.gameObject.SetActive(true);
                         pinCode = "";
-
+*/
 //						fuelPaid = true;
 					}
 					else
@@ -310,25 +328,31 @@ namespace Fate {
 				}
             }
 		}
+			
 
-		void FuelGuyGo()
+		public override void OnConversationEnd(string id)
 		{
-			Response (locale.GetText ("intro.fuel_guy_talk_ok"));
-			foreach (var m in fuelGuy.transform.gameObject.GetComponentsInChildren<MeshRenderer>()) {
-				if (m.gameObject.tag == "Selection") {
-					m.enabled = false;
-				}
-			}
-			fuelGuy.GetComponent<NavMeshObstacle> ().enabled = false;
-			fuelGuy.GetComponent<NavMeshAgent> ().enabled = true;
-			fuelGuy.GetComponent<NavMeshAgent> ().destination = GameObject.Find("FuelGuyPos").transform.position;
-			fuelGuy.GetComponent<CapsuleCollider> ().enabled = false;
-			fuelGuy.GetComponent<Animator> ().SetFloat ("Speed_f", 3.0f);
-			fuelGuy.GetComponent<Animator> ().SetFloat ("Anim_Speed_f", 3.0f);
-
-			truckFueled = true;
+			state = State.Playing;
+			base.OnConversationEnd(id);
 		}
 
+		public override void OnConversationEvent(string id, string name) 
+		{
+			if (name == "intro.fuel_guy_leave") {
+				foreach (var m in fuelGuy.transform.gameObject.GetComponentsInChildren<MeshRenderer>()) {
+					if (m.gameObject.tag == "Selection") {
+						m.enabled = false;
+					}
+				}
+				fuelGuy.GetComponent<NavMeshObstacle> ().enabled = false;
+				fuelGuy.GetComponent<NavMeshAgent> ().enabled = true;
+				fuelGuy.GetComponent<NavMeshAgent> ().destination = GameObject.Find("FuelGuyPos").transform.position;
+				fuelGuy.GetComponent<CapsuleCollider> ().enabled = false;
+				fuelGuy.GetComponent<Animator> ().SetFloat ("Speed_f", 3.0f);
+				fuelGuy.GetComponent<Animator> ().SetFloat ("Anim_Speed_f", 3.0f);
+				truckFueled = true;
+			}
+		}
 
 	}
 

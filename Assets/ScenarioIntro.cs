@@ -180,9 +180,11 @@ namespace Fate {
 					SayToSelf (locale.GetRandomText ("intro.fuel_guy_use", 3));
 				}
 				if (action == Interactable.Action.Talk) {
-					Say(locale.GetText ("intro.fuel_guy_talk"));
+				//	Say(locale.GetText ("intro.fuel_guy_talk"));
 					fuelGuy = obj;
-					Invoke ("FuelGuyGo", 0.5f);
+					//Invoke ("FuelGuyGo", 0.5f);
+
+                    conversation.StartDialog("intro.fuel_guy.start");
 				}
 			}
             if (obj.name == "Dumpster")

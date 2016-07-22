@@ -4,7 +4,7 @@
 *.log
 *.bin
 *.apk
-/traffic_Data/
+/fate_Data/
 /ts_Data/
 /metadata/
 /Library/

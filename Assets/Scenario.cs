@@ -40,10 +40,6 @@ namespace Fate {
 		
 		}
 
-		public virtual void OnConversationEvent(string name) 
-		{
-		}
-
 		public virtual void OnHeroEnterZone(string name) 
 		{
 		}
@@ -95,6 +91,26 @@ namespace Fate {
 		public virtual void OnConversationEvent(string id, string name) 
 		{
 		}
+
+        public virtual void OnConversationEnd(string id)
+        {
+            HideResponsePanel();
+            HideTextPanel();
+        }
+
+        public virtual void OnConversationText(string character, string key)
+        {
+            if (character == null)
+            {
+                Say(locale.GetText(key));
+                HideResponsePanel();
+            }
+            else
+            {
+                Response(locale.GetText(key));
+                HideTextPanel();
+            }
+        }
 
 		public virtual void OnConversationSelectAnswer(string id, string[] answers) 
 		{

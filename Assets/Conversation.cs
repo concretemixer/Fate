@@ -11,6 +11,7 @@ namespace Fate
 			public enum EntryType {
 				Start,
 				Text,
+                Think,
 				Choice,
 				Random,
 				Event,
@@ -86,6 +87,9 @@ namespace Fate
                                 break;
                             case ConversationEntry.EntryType.Text:
                                 scenario.OnConversationText(e.character, e.data);
+                                break;
+                            case ConversationEntry.EntryType.Think:
+                                scenario.OnConversationThink(e.character, e.data);
                                 break;
                             case ConversationEntry.EntryType.Choice:
                                 {

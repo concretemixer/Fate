@@ -11,6 +11,7 @@ namespace Fate {
         bool pinKnown = false;
 		bool fuelPaid = false;
         bool bikerLeft = false;
+        int pinFailCount = 0;
 	
 
 
@@ -118,14 +119,19 @@ namespace Fate {
 
                 if (pin.Length == 4)
                 {
+                    SayToSelf(pinCode + "[Enter]");
+
                     if (pinKnown && pin == "5803")
-                    {
-                        SayToSelf(pinCode + "[Enter]\nYes!!");
+                    {                        
+                        conversation.StartDialog("intro.girl.pin_good");
+                        state = Scenario.State.Interlude;                                                                  
                         fuelPaid = true;
                     }
                     else
                     {
-                        SayToSelf(pinCode + "[Enter]\nNo");
+                        conversation.StartDialog("intro.girl.pin_forgot");
+                        state = Scenario.State.Interlude;                                                                  
+                        pinFailCount++;
                     }
 
                     shopCamera.gameObject.SetActive(true);
@@ -305,26 +311,48 @@ namespace Fate {
                 }
 
 				if (action == Interactable.Action.Use) {
-					if (!truckFueled)
-					{
-						conversation.StartDialog("intro.girl.not_fueled");
-						state = Scenario.State.Interlude;
-					}
-					else if (!fuelPaid) {
+                    if (!truckFueled)
+                    {
+                        conversation.StartDialog("intro.girl.not_fueled");
+                        state = Scenario.State.Interlude;
+                    }
+                    else if (!fuelPaid)
+                    {
+                        string tool = hero.GetComponent<Hero>().Tool;
+                        if (string.IsNullOrEmpty(tool))
+                        {
+                            conversation.StartDialog("intro.girl.fueled");
+                            state = Scenario.State.Interlude;
+                        }
+                        else if (tool == "credit_card")
+                        {
+                            hero.GetComponent<Animator> ().SetBool("Give_t", true);
+                            conversation.StartDialog("intro.girl.enter_pin");
+                            state = Scenario.State.Interlude;
+                        }
+                        else if (tool == "cash")
+                        {
+                            hero.GetComponent<Animator> ().SetBool("Give_t", true);
+                            conversation.StartDialog("intro.girl.no_cash");
+                            state = Scenario.State.Interlude;
+                        }
+                        else
+                        {
+                            hero.GetComponent<Animator> ().SetBool("Give_t", true);
+                            conversation.StartDialog("intro.girl.what");
+                            state = Scenario.State.Interlude;
+                        }
 
-						conversation.StartDialog("intro.girl.fueled");
-						state = Scenario.State.Interlude;
 /*
-						Response (locale.GetText ("intro.girl_pin"));
-                        shopCamera.gameObject.SetActive(false);
-                        //shopSecurityCamera.gameObject.SetActive(true);
-                        shopPinCamera.gameObject.SetActive(true);
-                        pinCode = "";
+
 */
 //						fuelPaid = true;
-					}
-					else
-						Response (locale.GetText ("intro.girl_else"));
+                    }
+                    else
+                    {
+                        conversation.StartDialog("intro.girl.else");
+                        state = Scenario.State.Interlude;                    
+                    }
 				}
             }
 		}
@@ -352,6 +380,11 @@ namespace Fate {
 				fuelGuy.GetComponent<Animator> ().SetFloat ("Anim_Speed_f", 3.0f);
 				truckFueled = true;
 			}
+            if (name=="intro.enter_pin") {
+                shopCamera.gameObject.SetActive(false);
+                shopPinCamera.gameObject.SetActive(true);
+                pinCode = "";                
+            }
 		}
 
 	}

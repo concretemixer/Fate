@@ -112,6 +112,15 @@ namespace Fate {
             }
         }
 
+        public virtual void OnConversationThink(string character, string key)
+        {
+            if (character == null)
+            {
+                SayToSelf(locale.GetText(key));
+                HideResponsePanel();
+            }
+        }
+
 		public virtual void OnConversationSelectAnswer(string id, string[] answers) 
 		{
 		}

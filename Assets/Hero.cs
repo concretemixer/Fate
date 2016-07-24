@@ -13,13 +13,31 @@ namespace Fate {
 		GameObject selected = null;
 		Interactable.Action intendedAction = Interactable.Action.None;
 
+        string tool = "";
+
+        public string Tool
+        {
+            get
+            {
+                return tool;
+            }
+            private set
+            {
+                tool = value;
+            }
+        }
+
 		public Scenario scenario;
 		public  GameObject actionsPanel;
+        public  GameObject inventoryList;
 		// Use this for initialization
 
 
 		void Start () {
-		
+            inventoryList.GetComponent<Dropdown>().ClearOptions();
+            inventoryList.GetComponent<Dropdown>().AddOptions(
+                new System.Collections.Generic.List<string>() { "none", "cash","credit_card" }
+            );
 		}
 
 		int shotNum = 0;
@@ -208,6 +226,14 @@ namespace Fate {
 			Interactable.Action[] acts = selected.GetComponent<Interactable> ().Actions;
             OnActionSelected( acts[idx]);		
 		}
+
+        public void OnInventorySelected()
+        {
+            if (inventoryList.GetComponent<Dropdown>().value == 0)
+                tool = null;
+            else
+                tool = inventoryList.GetComponent<Dropdown>().options[inventoryList.GetComponent<Dropdown>().value].text;
+        }
 	}
 
 }

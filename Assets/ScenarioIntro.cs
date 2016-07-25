@@ -87,6 +87,8 @@ namespace Fate {
                 if (truckFueled)
                 {
                     GameObject.Find("Motorbike").GetComponent<Animation>().Play();
+                    GameObject.Find("Biker").transform.localPosition = Vector3.zero;
+                    GameObject.Find("Biker").GetComponent<Animator>().SetTrigger("Ride_t");
                     bikerLeft = true;
                 }
 
@@ -106,6 +108,125 @@ namespace Fate {
 
 		GameObject fuelGuy;
         string pinCode;
+
+        public override bool OnActionIntended(Interactable.Action action, GameObject obj)
+        {
+            if (obj.name == "FuelPumps")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.pump_look", 2));
+                    return false;
+                }
+            }
+            if (obj.name == "Truck")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.my_truck", 3));
+                    return false;
+                }
+                if (action == Interactable.Action.EnterTruck)
+                {
+                    if (!truckFueled)
+                    {
+                        SayToSelf(locale.GetText("intro.truck.fuel_first"));
+                        return false;
+                    }
+                    else if (!fuelPaid)
+                    {
+                        SayToSelf(locale.GetText("intro.truck.pay_first"));
+                        return false;
+                    }
+                    
+                }
+
+            }
+            if (obj.name == "FuelGuy")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.fuel_guy_look", 1));
+                    return false;
+                }
+                if (action == Interactable.Action.Use)
+                {
+                    SayToSelf(locale.GetRandomText("intro.fuel_guy_use", 3));
+                    return false;
+                }
+            }
+            if (obj.name == "Biker")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.biker_look", 1));
+                    return false;
+                }
+            }
+            if (obj.name == "Dumpster")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.dumpster_look", 2));
+                    return false;
+                }
+            }
+            if (obj.name == "SecurityCamera")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.camera_look", 2));
+                    return false;
+                }
+            }
+            if (obj.name == "FireExtinguisher")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.extinguisher_look", 2));
+                    return false;
+                }
+            }
+            if (obj.name == "SecurityMonitor")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.sec_look", 2));
+                    return false;
+                }
+            }
+            if (obj.name == "FuelStation")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    if (!truckFueled)
+                        SayToSelf(locale.GetText("intro.shop_look"));
+                    else if (!fuelPaid)
+                        SayToSelf(locale.GetText("intro.shop_look_pay"));
+                    else
+                        SayToSelf(locale.GetText("intro.shop_look_leave"));
+                }
+            }
+            if (obj.name == "Diesel")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.diesel_look", 2));
+                }
+            }
+            if (obj.name == "CounterGirl")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    SayToSelf(locale.GetRandomText("intro.girl_look", 3));
+                }
+            }
+
+            if (action == Interactable.Action.Look)
+                return false;
+
+            return true;
+        }
 
 		public override void OnAction(Interactable.Action action, GameObject obj)
 		{
@@ -139,17 +260,10 @@ namespace Fate {
                 }
             }
 			if (obj.name == "Truck") {
-				if (action == Interactable.Action.Look) {
-					SayToSelf (locale.GetRandomText("intro.my_truck",3));
-				}
+				
 				if (action == Interactable.Action.EnterTruck) {
-					if (!truckFueled) {
-						SayToSelf (locale.GetText ("intro.truck.fuel_first"));
-					}
-					else if (!fuelPaid) {
-						SayToSelf (locale.GetText ("intro.truck.pay_first"));
-					}
-					else {
+					if (truckFueled && fuelPaid) {
+					
 						SayToSelf (locale.GetText ("intro.truck.go"));
 						startCamera.gameObject.SetActive(true);
 						gameCamera.gameObject.SetActive (false);
@@ -163,9 +277,7 @@ namespace Fate {
 				}
 			}
 			if (obj.name == "SecurityMonitor") {
-				if (action == Interactable.Action.Look) {
-					SayToSelf (locale.GetRandomText ("intro.sec_look", 2));
-				}
+
 				if (action == Interactable.Action.LookClose) {
 					shopCamera.gameObject.SetActive(false);
 					shopSecurityCamera.gameObject.SetActive (true);
@@ -173,18 +285,9 @@ namespace Fate {
                   //  pinCode = "";
 				}
 			}
-			if (obj.name == "FuelPumps") {
-				if (action == Interactable.Action.Look) {
-					SayToSelf (locale.GetRandomText ("intro.pump_look", 2));
-				}
-			}
+
 			if (obj.name == "FuelGuy") {
-				if (action == Interactable.Action.Look) {
-					SayToSelf (locale.GetRandomText ("intro.fuel_guy_look",1));
-				}
-				if (action == Interactable.Action.Use) {
-					SayToSelf (locale.GetRandomText ("intro.fuel_guy_use", 3));
-				}
+
 				if (action == Interactable.Action.Talk) {
 				//	Say(locale.GetText ("intro.fuel_guy_talk"));
 					fuelGuy = obj;
@@ -195,9 +298,6 @@ namespace Fate {
 				}
 			}
 			if (obj.name == "Biker") {
-				if (action == Interactable.Action.Look) {
-					SayToSelf (locale.GetRandomText ("intro.biker_look",1));
-				}
 				if (action == Interactable.Action.Talk) {
 					conversation.StartDialog("intro.biker.start");
 					state = Scenario.State.Interlude;
@@ -205,29 +305,13 @@ namespace Fate {
 			}
             if (obj.name == "Dumpster")
             {
-                if (action == Interactable.Action.Look)
-                {
-                    SayToSelf(locale.GetRandomText("intro.dumpster_look", 2));
-                }
+
                 if (action == Interactable.Action.Use)
                 {
                     SayToSelf(locale.GetRandomText("intro.dumpster_use", 2));
                 }
             }
-            if (obj.name == "SecurityCamera")
-            {
-                if (action == Interactable.Action.Look)
-                {
-                    SayToSelf(locale.GetRandomText("intro.camera_look", 2));
-                }
-            }
-            if (obj.name == "FireExtinguisher")
-            {
-                if (action == Interactable.Action.Look)
-                {
-                    SayToSelf(locale.GetRandomText("intro.extinguisher_look", 2));
-                }
-            }
+
             
             if (obj.name == "MonitorWall")
             {
@@ -242,15 +326,6 @@ namespace Fate {
             }
             if (obj.name == "FuelStation")
             {
-                if (action == Interactable.Action.Look)
-                {
-                    if (!truckFueled)
-                        SayToSelf(locale.GetText("intro.shop_look"));
-                    else if (!fuelPaid)
-                        SayToSelf(locale.GetText("intro.shop_look_pay"));
-                    else
-                        SayToSelf(locale.GetText("intro.shop_look_leave"));
-                }
                 if (action == Interactable.Action.Enter)
                 {
                     shopCamera.gameObject.SetActive(true);

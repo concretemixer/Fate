@@ -44,6 +44,11 @@ namespace Fate {
 		{
 		}
 
+        public virtual bool OnActionIntended(Interactable.Action action, GameObject obj)
+        {
+            return true;
+        }
+
 		public virtual void OnAction(Interactable.Action action, GameObject obj)
 		{
 		}

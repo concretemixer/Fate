@@ -202,7 +202,11 @@ namespace Fate {
         public void OnActionSelected(Interactable.Action act)
         {            
             Debug.Log("intended " + act.ToString() + " on " + selected.name);
+
             actionsPanel.SetActive(false);
+
+            if (!scenario.OnActionIntended(act, selected))
+                return;
 
             GetComponent<NavMeshAgent>().destination = transform.position;
 
@@ -210,8 +214,7 @@ namespace Fate {
             {
                 if (child.gameObject.tag == "Respawn")
                 {
-                    if (act != Interactable.Action.Look)
-                        GetComponent<NavMeshAgent>().destination = child.transform.position;
+                    GetComponent<NavMeshAgent>().destination = child.transform.position;
                 }
             }
 

@@ -26,6 +26,8 @@ public class Locale {
         {"intro.dumpster_look.1", "Возможно, там живут крысы или бомжи"},
         {"intro.dumpster_use.0", "Я не буду рыться в мусоре."},
         {"intro.dumpster_use.1", "Я пока не голоден."},
+        {"intro.dumpster_no_waste.0", "Зачем мне это выкидывать?"},
+        {"intro.dumpster_no_waste.1", "Это мне еще пригодится."},
         {"intro.shop_look", "Внутри кассы и магазин - все как обычно."},
         {"intro.shop_look_pay", "Надо зайти внутрь и заплатить."},
         {"intro.shop_look_leave", "Я там уже был. Надо ехать дальше."},
@@ -36,7 +38,10 @@ public class Locale {
         {"intro.girl_look.2", "Кассирша. Скучная работа, должно быть."},
 
         {"intro.girl_pickup", "- Девушка, как вас зовут?"},
-
+        {"intro.camera_look.0", "Понавешали камер, епт!"},
+        {"intro.extinguisher_look.0","Если вдруг пожар, эта штука нам поможет. Хотя вряд ли."},
+        {"intro.camera_look.1", "Видеонаблюдение в туалете ведется для вашей безопасности!\nХа-ха."},
+        {"intro.extinguisher_look.1","Если вдруг заправка загорится, пользы от него немного будет."},
 		{"intro.girl_pickup.answer.0", "- Света"},
 		{"intro.girl_pickup.answer.1", "- Маша"},
 		{"intro.girl_pickup.answer.2", "- Лена"},
@@ -61,6 +66,7 @@ public class Locale {
 		{"intro.biker_talk.1", "- Дай прокатиться, бро!"},
 		{"intro.biker_talk.2", "- Давно катаешься? Сколько переломов уже?"},
 		{"intro.biker_fuck_off", "- Отвали!"},
+        {"intro.vending_cash","Это аппарат принимает только наличные"},
 	};
 
 
@@ -74,12 +80,8 @@ public class Locale {
 	}
 
 	public string GetRandomText(string key, int n)
-	{
-		string result;
-		if (entries.TryGetValue (key+"."+Random.Range(0,n).ToString(), out result))
-			return result;
-		else
-			return key;
+	{		
+        return GetText(key + "." + Random.Range(0, n).ToString());
 	}
 
 }

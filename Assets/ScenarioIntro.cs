@@ -221,6 +221,37 @@ namespace Fate {
                     SayToSelf(locale.GetRandomText("intro.girl_look", 3));
                 }
             }
+            if (obj.name == "VendingMachine")
+            {
+                if (action == Interactable.Action.Use)
+                {
+                    if (hero.GetComponent<Hero>().Tool == "credit_card")
+                    {
+                        SayToSelf(locale.GetText("intro.vending_cash"));
+                        return false;
+                    }
+                }
+            }
+
+            if (obj.name == "Dumpster")
+            {
+                if (action == Interactable.Action.Use)
+                {
+                    if (string.IsNullOrEmpty(hero.GetComponent<Hero>().Tool))
+                    {
+                        if (pinFailCount == 0)
+                        {
+                            SayToSelf(locale.GetRandomText("intro.dumpster_use", 2));
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        SayToSelf(locale.GetRandomText("intro.dumpster_no_waste", 2));
+                        return false;
+                    }
+                }
+            }
 
             if (action == Interactable.Action.Look)
                 return false;
@@ -308,7 +339,8 @@ namespace Fate {
 
                 if (action == Interactable.Action.Use)
                 {
-                    SayToSelf(locale.GetRandomText("intro.dumpster_use", 2));
+                    hero.GetComponent<Animator>().SetBool("Give_t", true);
+                    hero.GetComponent<Hero>().TakeItem("crowbar");                    
                 }
             }
 
@@ -366,19 +398,24 @@ namespace Fate {
 					state = State.Death;
 				}
 			}
-            if (obj.name == "Diesel")
+            if (obj.name == "VendingMachine")
             {
-                if (action == Interactable.Action.Look)
+                if (action == Interactable.Action.Use)
                 {
-                    SayToSelf(locale.GetRandomText("intro.diesel_look", 2));
+                    if (hero.GetComponent<Hero>().Tool == "cash")
+                    {
+                        hero.GetComponent<Animator>().SetBool("Give_t", true);
+                        hero.GetComponent<Hero>().TakeItem("drink");
+                    }
+                    else
+                    {
+                        hero.GetComponent<Animator>().SetBool("Jump_t", true);
+                    }
                 }
             }
             if (obj.name == "CounterGirl")
             {
-                if (action == Interactable.Action.Look)
-                {
-                    SayToSelf(locale.GetRandomText("intro.girl_look", 3));
-                }
+
                 if (action == Interactable.Action.Talk)
                 {
 					conversation.StartDialog("intro.girl.pickup");

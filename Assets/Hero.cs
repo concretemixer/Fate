@@ -12,6 +12,7 @@ namespace Fate {
 
 		GameObject selected = null;
 		Interactable.Action intendedAction = Interactable.Action.None;
+        Vector3 intendedDestination;
 
         string tool = "";
 
@@ -30,14 +31,14 @@ namespace Fate {
 		public Scenario scenario;
 		public  GameObject actionsPanel;
         public  GameObject inventoryList;
+
+        System.Collections.Generic.List<string> inventory =  new System.Collections.Generic.List<string>() { "none", "cash","credit_card" };
 		// Use this for initialization
 
 
 		void Start () {
             inventoryList.GetComponent<Dropdown>().ClearOptions();
-            inventoryList.GetComponent<Dropdown>().AddOptions(
-                new System.Collections.Generic.List<string>() { "none", "cash","credit_card" }
-            );
+            inventoryList.GetComponent<Dropdown>().AddOptions( inventory );
 		}
 
 		int shotNum = 0;
@@ -56,13 +57,24 @@ namespace Fate {
 
 
 			if (intendedAction != Interactable.Action.None) {
-				float d = (GetComponent<NavMeshAgent> ().destination - transform.position).magnitude;
+                Vector3 d = GetComponent<NavMeshAgent> ().destination - transform.position;
+                d.y = 0;
 				//Debug.Log ("d =" + d);
-				if (d < 0.25) {
-					if (selected != null) {
-						scenario.OnAction (intendedAction, selected);
-					}
-					intendedAction = Interactable.Action.None;
+                if (d.magnitude < 0.5f) {
+
+                    if (GetComponent<NavMeshAgent>().autoBraking)
+                    {
+                        if (selected != null)
+                        {
+                            scenario.OnAction(intendedAction, selected);
+                        }
+                        intendedAction = Interactable.Action.None;
+                    }
+                    else
+                    {
+                        GetComponent<NavMeshAgent>().autoBraking = true;
+                        GetComponent<NavMeshAgent>().destination = intendedDestination;
+                    }
 				}
 
 			}
@@ -114,6 +126,7 @@ namespace Fate {
 							if (child.gameObject.tag == "Respawn") {
 								//GetComponent<NavMeshAgent> ().destination = child.transform.position;
 								GetComponent<NavMeshAgent> ().destination = transform.position;
+                                GetComponent<NavMeshAgent>().autoBraking = true;
 							}
 						}
 
@@ -132,6 +145,7 @@ namespace Fate {
 					if (ground.Raycast (ray, out rayDistance)) {
 						touchGround = ray.origin + ray.direction * rayDistance;
 						GetComponent<NavMeshAgent> ().destination = touchGround;
+                        GetComponent<NavMeshAgent>().autoBraking = true;
 						hitOk = true;
 
 						foreach (var go in GameObject.FindGameObjectsWithTag ("Selection")) {
@@ -214,7 +228,9 @@ namespace Fate {
             {
                 if (child.gameObject.tag == "Respawn")
                 {
-                    GetComponent<NavMeshAgent>().destination = child.transform.position;
+                    GetComponent<NavMeshAgent>().destination = child.transform.position - child.transform.forward * child.transform.localScale.x;
+                    GetComponent<NavMeshAgent>().autoBraking = false;
+                    intendedDestination = child.transform.position;
                 }
             }
 
@@ -236,6 +252,13 @@ namespace Fate {
                 tool = null;
             else
                 tool = inventoryList.GetComponent<Dropdown>().options[inventoryList.GetComponent<Dropdown>().value].text;
+        }
+
+        public void TakeItem(string item) 
+        {
+            inventory.Add(item);
+            inventoryList.GetComponent<Dropdown>().ClearOptions();
+            inventoryList.GetComponent<Dropdown>().AddOptions( inventory );
         }
 	}
 

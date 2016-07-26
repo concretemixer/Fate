@@ -15,12 +15,13 @@ namespace Fate
 			new ConversationEntry("intro.fuel_guy.start",ConversationEntry.EntryType.End, 4, null, "",-1,0),
 
 			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Start, 0, null,"",1,0),
-			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Random, 1, null, "2|3|4",-1,0.5f),
-			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Text, 2, null, "intro.biker_talk.0",5,1.5f),
-			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Text, 3, null, "intro.biker_talk.1",5,1.5f),
-			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Text, 4, null, "intro.biker_talk.2",5,1.5f),
-			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Text, 5, "Biker", "intro.biker_fuck_off",6,1.0f),
-			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.End, 6, null, "",-1,0),
+			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Random, 1, null, "2|3|4|5",-1,0.5f),
+			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Text, 2, null, "intro.biker_talk.0",6,1.5f),
+			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Text, 3, null, "intro.biker_talk.1",6,1.5f),
+			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Text, 4, null, "intro.biker_talk.2",6,1.5f),
+			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Text, 5, null, "intro.biker_talk.3",6,1.5f),
+			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.Text, 6, "Biker", "intro.biker_fuck_off",7,1.0f),
+			new ConversationEntry("intro.biker.start",ConversationEntry.EntryType.End, 7, null, "",-1,0),
 
 			new ConversationEntry("intro.girl.pickup",ConversationEntry.EntryType.Start, 0, null,"",1,0),
 			new ConversationEntry("intro.girl.pickup",ConversationEntry.EntryType.Text, 1, null, "intro.girl_pickup",2,1.5f),
@@ -54,6 +55,10 @@ namespace Fate
                 new ConversationEntry("intro.girl.no_cash",ConversationEntry.EntryType.Start, 0, null,"",1,1.5f),
                 new ConversationEntry("intro.girl.no_cash",ConversationEntry.EntryType.Text, 1, "CounterGirl", "intro.girl_no_cash",2,2.0f),
                 new ConversationEntry("intro.girl.no_cash",ConversationEntry.EntryType.End, 2, null, "",-1,0),
+
+                new ConversationEntry("intro.girl.cash_ok",ConversationEntry.EntryType.Start, 0, null,"",1,1.5f),
+                new ConversationEntry("intro.girl.cash_ok",ConversationEntry.EntryType.Text, 1, "CounterGirl", "intro.girl_cash_ok",2,2.0f),
+                new ConversationEntry("intro.girl.cash_ok",ConversationEntry.EntryType.End, 2, null, "",-1,0),
 
                 new ConversationEntry("intro.girl.enter_pin",ConversationEntry.EntryType.Start, 0, null,"",1,1.5f),
                 new ConversationEntry("intro.girl.enter_pin",ConversationEntry.EntryType.Text, 1, "CounterGirl", "intro.girl_pin",2,1.0f),

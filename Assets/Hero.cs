@@ -12,7 +12,7 @@ namespace Fate {
 
 		GameObject selected = null;
 		Interactable.Action intendedAction = Interactable.Action.None;
-        Vector3 intendedDestination;
+        Quaternion intendedRotation;
 
         string tool = "";
 
@@ -32,11 +32,11 @@ namespace Fate {
 		public  GameObject actionsPanel;
         public  GameObject inventoryList;
 
-        System.Collections.Generic.List<string> inventory =  new System.Collections.Generic.List<string>() { "none", "cash","credit_card" };
+        System.Collections.Generic.List<string> inventory =  new System.Collections.Generic.List<string>() { "none", "cash","credit_card","crowbar" };
 		// Use this for initialization
 
 
-		void Start () {
+		void Start() {
             inventoryList.GetComponent<Dropdown>().ClearOptions();
             inventoryList.GetComponent<Dropdown>().AddOptions( inventory );
 		}
@@ -56,27 +56,24 @@ namespace Fate {
 
 
 
-			if (intendedAction != Interactable.Action.None) {
+			if (intendedAction != Interactable.Action.None) 
+            {
                 Vector3 d = GetComponent<NavMeshAgent> ().destination - transform.position;
                 d.y = 0;
 				//Debug.Log ("d =" + d);
-                if (d.magnitude < 0.5f) {
+                if (d.magnitude < 0.25f) 
+                {
 
-                    if (GetComponent<NavMeshAgent>().autoBraking)
+
+
+
+                    if (selected != null)
                     {
-                        if (selected != null)
-                        {
-                            scenario.OnAction(intendedAction, selected);
-                        }
-                        intendedAction = Interactable.Action.None;
+                        transform.rotation = intendedRotation;
+                        scenario.OnAction(intendedAction, selected);
                     }
-                    else
-                    {
-                        GetComponent<NavMeshAgent>().autoBraking = true;
-                        GetComponent<NavMeshAgent>().destination = intendedDestination;
-                    }
+                    intendedAction = Interactable.Action.None;                  
 				}
-
 			}
 
 			if (Input.GetKeyDown(KeyCode.S))
@@ -228,10 +225,14 @@ namespace Fate {
             {
                 if (child.gameObject.tag == "Respawn")
                 {
-                    GetComponent<NavMeshAgent>().destination = child.transform.position - child.transform.forward * child.transform.localScale.x;
-                    GetComponent<NavMeshAgent>().autoBraking = false;
-                    intendedDestination = child.transform.position;
+                    GetComponent<NavMeshAgent>().destination = child.transform.position;// -child.transform.forward * child.transform.localScale.x;
+                    intendedRotation = child.transform.rotation;
                 }
+                if (child.gameObject.tag == "Selection")
+                {
+                    child.GetComponent<MeshRenderer>().enabled = false;
+                }
+
             }
 
             float d = (GetComponent<NavMeshAgent>().destination - transform.position).magnitude;

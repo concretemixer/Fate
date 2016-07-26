@@ -11,6 +11,9 @@ namespace Fate {
         bool pinKnown = false;
 		bool fuelPaid = false;
         bool bikerLeft = false;
+        bool camerasDisabled = false;
+        bool vendingBroken = false;
+
         int pinFailCount = 0;
 	
 
@@ -171,7 +174,7 @@ namespace Fate {
                     return false;
                 }
             }
-            if (obj.name == "SecurityCamera")
+            if (obj.name.StartsWith("SecurityCamera"))
             {
                 if (action == Interactable.Action.Look)
                 {
@@ -194,6 +197,7 @@ namespace Fate {
                     SayToSelf(locale.GetRandomText("intro.sec_look", 2));
                     return false;
                 }
+
             }
             if (obj.name == "FuelStation")
             {
@@ -223,6 +227,12 @@ namespace Fate {
             }
             if (obj.name == "VendingMachine")
             {
+                if (action == Interactable.Action.Look) {
+                    if (vendingBroken)
+                        SayToSelf(locale.GetText("intro.vending_look"));
+                    else
+                        SayToSelf(locale.GetText("intro.vending_bloken"));
+                }
                 if (action == Interactable.Action.Use)
                 {
                     if (hero.GetComponent<Hero>().Tool == "credit_card")
@@ -230,6 +240,12 @@ namespace Fate {
                         SayToSelf(locale.GetText("intro.vending_cash"));
                         return false;
                     }
+                    if (hero.GetComponent<Hero>().Tool == "crowbar" && !camerasDisabled)
+                    {
+                        SayToSelf(locale.GetText("intro.vending_cameras"));
+                        return false;
+                    }
+                    
                 }
             }
 
@@ -380,22 +396,25 @@ namespace Fate {
 					SayToSelf (locale.GetRandomText ("intro.box_look",2));
 				}				
 				if (action == Interactable.Action.Use) {
-					foreach (var m in obj.transform.gameObject.GetComponentsInChildren<MeshRenderer>()) {
-						if (m.gameObject.tag == "Selection") {
-							m.enabled = false;
-						}
-					}					
-					obj.GetComponentInChildren<ParticleSystem> ().Play ();
-					hero.GetComponent<Animator> ().SetBool("Death_b", true);
-					hero.GetComponent<NavMeshAgent> ().updateRotation = false;
 
-					Vector3 dir = 
-						hero.GetComponent<NavMeshAgent> ().destination - obj.transform.position;
-					dir.Normalize ();
-					hero.GetComponent<NavMeshAgent> ().destination = 
-						hero.GetComponent<NavMeshAgent> ().destination + dir * 1.5f;
+                    if (hero.GetComponent<Hero>().Tool == "drink")
+                    {
+                        hero.GetComponent<Animator>().SetBool("Kick_t", true);
+                        camerasDisabled = true;
 
-					state = State.Death;
+                        GameObject.Find("SecurityMonitor").GetComponent<Interactable>().defaultAction = Interactable.Action.Look;
+                        GameObject.Find("SecurityMonitorScreen").SetActive(false);
+                        GameObject.Find("SecurityCamera").GetComponent<Animation>().Stop();
+                        GameObject.Find("SecurityCamera2").GetComponent<Animation>().Stop();
+                    }
+                    else
+                    {
+                        obj.GetComponentInChildren<ParticleSystem>().Play();
+                        hero.GetComponent<Animator>().SetBool("Death_b", true);
+                        hero.GetComponent<Animator>().SetTrigger("Give_t");
+                        hero.GetComponent<NavMeshAgent>().updateRotation = false;
+                        state = State.Death;
+                    }
 				}
 			}
             if (obj.name == "VendingMachine")
@@ -407,9 +426,17 @@ namespace Fate {
                         hero.GetComponent<Animator>().SetBool("Give_t", true);
                         hero.GetComponent<Hero>().TakeItem("drink");
                     }
+                    else if (hero.GetComponent<Hero>().Tool == "crowbar")
+                    {
+                        obj.GetComponent<Animation>().Play();
+                        hero.GetComponent<Animator>().SetBool("Open_t", true);
+                        hero.GetComponent<Hero>().TakeItem("cash_big");
+                        vendingBroken = true;
+                    }
                     else
                     {
-                        hero.GetComponent<Animator>().SetBool("Jump_t", true);
+                        obj.GetComponent<Animation>().Play();
+                        hero.GetComponent<Animator>().SetBool("Kick_t", true);
                     }
                 }
             }
@@ -447,6 +474,13 @@ namespace Fate {
                             hero.GetComponent<Animator> ().SetBool("Give_t", true);
                             conversation.StartDialog("intro.girl.no_cash");
                             state = Scenario.State.Interlude;
+                        }
+                        else if (tool == "cash_big")
+                        {
+                            hero.GetComponent<Animator>().SetBool("Give_t", true);
+                            conversation.StartDialog("intro.girl.cash_ok");
+                            state = Scenario.State.Interlude;
+                            fuelPaid = true;
                         }
                         else
                         {

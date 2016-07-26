@@ -268,7 +268,16 @@ namespace Fate {
                     }
                 }
             }
-
+            if (obj.name == "WallBox")
+            {
+                if (action == Interactable.Action.Look)
+                {
+                    if (camerasDisabled)
+                        SayToSelf(locale.GetRandomText("intro.box_look_broken", 2));
+                    else
+                        SayToSelf(locale.GetRandomText("intro.box_look", 2));
+                }   
+            }
             if (action == Interactable.Action.Look)
                 return false;
 
@@ -392,24 +401,41 @@ namespace Fate {
             }
             if (obj.name == "WallBox")
             {
-				if (action == Interactable.Action.Look) {
-					SayToSelf (locale.GetRandomText ("intro.box_look",2));
-				}				
+
 				if (action == Interactable.Action.Use) {
 
                     if (hero.GetComponent<Hero>().Tool == "drink")
                     {
-                        hero.GetComponent<Animator>().SetBool("Kick_t", true);
-                        camerasDisabled = true;
+                        GameObject drink = GameObject.Find("ItemTemplate_drink");
+                        GameObject.Find("Hero_Item1").GetComponent<SkinnedMeshRenderer>().sharedMesh = drink.GetComponent<MeshFilter>().mesh;
 
-                        GameObject.Find("SecurityMonitor").GetComponent<Interactable>().defaultAction = Interactable.Action.Look;
-                        GameObject.Find("SecurityMonitorScreen").SetActive(false);
-                        GameObject.Find("SecurityCamera").GetComponent<Animation>().Stop();
-                        GameObject.Find("SecurityCamera2").GetComponent<Animation>().Stop();
+
+                        hero.GetComponent<Animator>().SetBool("Pour_t", true);
+                        foreach (var c in obj.GetComponentsInChildren<ParticleSystem>())
+                        {
+                            if (c.gameObject.name == "Smoke" || c.gameObject.name == "Spark2")
+                                c.Play();
+                        }
+                            
+                        if (!camerasDisabled)
+                        {
+                            obj.GetComponent<Interactable>().defaultAction = Interactable.Action.Look;
+                            camerasDisabled = true;
+                            GameObject.Find("SecurityMonitor").GetComponent<Interactable>().defaultAction = Interactable.Action.Look;
+                            GameObject.Find("SecurityMonitorScreen").SetActive(false);
+                            GameObject.Find("SecurityCamera").GetComponent<Animation>().Stop();
+                            GameObject.Find("SecurityCamera2").GetComponent<Animation>().Stop();
+                        }
+
+                        hero.GetComponent<Hero>().RemoveItem("drink", true, 6);
                     }
                     else
                     {
-                        obj.GetComponentInChildren<ParticleSystem>().Play();
+                        foreach (var c in obj.GetComponentsInChildren<ParticleSystem>())
+                        {
+                            if (c.gameObject.name == "Spark1")
+                                c.Play();
+                        }
                         hero.GetComponent<Animator>().SetBool("Death_b", true);
                         hero.GetComponent<Animator>().SetTrigger("Give_t");
                         hero.GetComponent<NavMeshAgent>().updateRotation = false;

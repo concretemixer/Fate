@@ -14,6 +14,7 @@ namespace Fate {
 		Interactable.Action intendedAction = Interactable.Action.None;
         Quaternion intendedRotation;
 
+        float destroyTimer=0;
         string tool = "";
 
         public string Tool
@@ -32,14 +33,30 @@ namespace Fate {
 		public  GameObject actionsPanel;
         public  GameObject inventoryList;
 
-        System.Collections.Generic.List<string> inventory =  new System.Collections.Generic.List<string>() { "none", "cash","credit_card","crowbar" };
+        System.Collections.Generic.List<string> inventory =  new System.Collections.Generic.List<string>() { "none", "cash","credit_card" };
 		// Use this for initialization
 
 
 		void Start() {
+            UpdateInventory();
+		}
+
+        void UpdateInventory()
+        {
             inventoryList.GetComponent<Dropdown>().ClearOptions();
             inventoryList.GetComponent<Dropdown>().AddOptions( inventory );
-		}
+            foreach(var s in inventory) {
+                if (GameObject.Find("ItemTemplate_" + s)==null)
+                {
+                    Object go = Resources.Load("Items/" + s); 
+                    if (go != null)
+                    {
+                        GameObject g = GameObject.Instantiate(go, new Vector3(1000, 1000, 1000), Quaternion.identity) as GameObject;
+                        g.name = "ItemTemplate_" + s;
+                    }               
+                }
+            }
+        }
 
 		int shotNum = 0;
 
@@ -54,6 +71,12 @@ namespace Fate {
 		// Update is called once per frame
 		void Update () {
 
+            destroyTimer -= Time.deltaTime;
+            if (destroyTimer<0)
+            {
+                GameObject.Find("Hero_Item1").GetComponent<SkinnedMeshRenderer>().sharedMesh = null;
+                GameObject.Find("Hero_Item2").GetComponent<SkinnedMeshRenderer>().sharedMesh = null;
+            }
 
 
 			if (intendedAction != Interactable.Action.None) 
@@ -258,8 +281,15 @@ namespace Fate {
         public void TakeItem(string item) 
         {
             inventory.Add(item);
-            inventoryList.GetComponent<Dropdown>().ClearOptions();
-            inventoryList.GetComponent<Dropdown>().AddOptions( inventory );
+            UpdateInventory();
+        }
+
+        public void RemoveItem(string item, bool destroy, float destroyTimer)
+        {
+            if (destroy)
+            {
+            }
+            this.destroyTimer = destroyTimer;
         }
 	}
 

@@ -413,7 +413,7 @@ namespace Fate {
                         hero.GetComponent<Animator>().SetBool("Pour_t", true);
                         foreach (var c in obj.GetComponentsInChildren<ParticleSystem>())
                         {
-                            if (c.gameObject.name == "Smoke" || c.gameObject.name == "Spark2")
+                            if (c.gameObject.name == "Smoke" || c.gameObject.name == "Spark2" || c.gameObject.name == "Spark3")
                                 c.Play();
                         }
                             
@@ -424,7 +424,7 @@ namespace Fate {
                             GameObject.Find("SecurityMonitor").GetComponent<Interactable>().defaultAction = Interactable.Action.Look;
                             GameObject.Find("SecurityMonitorScreen").SetActive(false);
                             GameObject.Find("SecurityCamera").GetComponent<Animation>().Stop();
-                            GameObject.Find("SecurityCamera2").GetComponent<Animation>().Stop();
+                            GameObject.Find("SecurityCamera2").GetComponent<Animation>().Play("camera_die");
                         }
 
                         hero.GetComponent<Hero>().RemoveItem("drink", true, 6);
@@ -454,10 +454,12 @@ namespace Fate {
                     }
                     else if (hero.GetComponent<Hero>().Tool == "crowbar")
                     {
-                        obj.GetComponent<Animation>().Play();
+                        //obj.GetComponent<Animation>().Play();
                         hero.GetComponent<Animator>().SetBool("Open_t", true);
                         hero.GetComponent<Hero>().TakeItem("cash_big");
                         vendingBroken = true;
+                        obj.GetComponent<Animation>().Play("break_vending");
+                        //obj.transform.FindChild("Glass").GetComponent<MeshRenderer>().enabled = true;
                     }
                     else
                     {
@@ -556,6 +558,14 @@ namespace Fate {
                 shopCamera.gameObject.SetActive(false);
                 shopPinCamera.gameObject.SetActive(true);
                 pinCode = "";                
+            }
+            if (name == "intro.girl_no_cash")
+            {
+                GameObject.Find("CounterGirl").GetComponent<Animator> ().SetBool("SayNo_t", true);
+            }
+            if (name == "intro.girl_yes_cash")
+            {
+                GameObject.Find("CounterGirl").GetComponent<Animator> ().SetBool("SayYes_t", true);
             }
 		}
 

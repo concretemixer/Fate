@@ -288,8 +288,10 @@ namespace Fate {
         {
             if (destroy)
             {
+                inventory.Remove(item);
             }
             this.destroyTimer = destroyTimer;
+            UpdateInventory();
         }
 	}
 

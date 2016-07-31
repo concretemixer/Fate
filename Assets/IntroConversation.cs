@@ -53,8 +53,9 @@ namespace Fate
                 new ConversationEntry("intro.girl.what",ConversationEntry.EntryType.End, 2, null, "",-1,0),
 
                 new ConversationEntry("intro.girl.no_cash",ConversationEntry.EntryType.Start, 0, null,"",1,1.5f),
-                new ConversationEntry("intro.girl.no_cash",ConversationEntry.EntryType.Text, 1, "CounterGirl", "intro.girl_no_cash",2,2.0f),
-                new ConversationEntry("intro.girl.no_cash",ConversationEntry.EntryType.End, 2, null, "",-1,0),
+                new ConversationEntry("intro.girl.no_cash",ConversationEntry.EntryType.Event, 1, null, "intro.girl_no_cash",2,0),
+                new ConversationEntry("intro.girl.no_cash",ConversationEntry.EntryType.Text, 2, "CounterGirl", "intro.girl_no_cash",3,2.0f),
+                new ConversationEntry("intro.girl.no_cash",ConversationEntry.EntryType.End, 3, null, "",-1,0),
 
                 new ConversationEntry("intro.girl.cash_ok",ConversationEntry.EntryType.Start, 0, null,"",1,1.5f),
                 new ConversationEntry("intro.girl.cash_ok",ConversationEntry.EntryType.Text, 1, "CounterGirl", "intro.girl_cash_ok",2,2.0f),
@@ -66,13 +67,15 @@ namespace Fate
                 new ConversationEntry("intro.girl.enter_pin",ConversationEntry.EntryType.End, 3, null, "",-1,0),
 
                 new ConversationEntry("intro.girl.pin_forgot",ConversationEntry.EntryType.Start, 0, null,"",1,0.5f),
-                new ConversationEntry("intro.girl.pin_forgot",ConversationEntry.EntryType.Text, 1, "CounterGirl", "intro.girl_pin_wrong_1",2,2.0f),
-                new ConversationEntry("intro.girl.pin_forgot",ConversationEntry.EntryType.Text, 2, null, "intro.girl_pin_wrong_2",3,2.0f),
-                new ConversationEntry("intro.girl.pin_forgot",ConversationEntry.EntryType.End, 3, null, "",-1,0),
+                new ConversationEntry("intro.girl.pin_forgot",ConversationEntry.EntryType.Event, 1, null, "intro.girl_no_cash",2,0),
+                new ConversationEntry("intro.girl.pin_forgot",ConversationEntry.EntryType.Text, 2, "CounterGirl", "intro.girl_pin_wrong_1",3,2.0f),
+                new ConversationEntry("intro.girl.pin_forgot",ConversationEntry.EntryType.Text, 3, null, "intro.girl_pin_wrong_2",4,2.0f),
+                new ConversationEntry("intro.girl.pin_forgot",ConversationEntry.EntryType.End, 4, null, "",-1,0),
 
                 new ConversationEntry("intro.girl.pin_good",ConversationEntry.EntryType.Start, 0, null,"",1,0.5f),
-                new ConversationEntry("intro.girl.pin_good",ConversationEntry.EntryType.Text, 1, "CounterGirl", "intro.girl_pin_good_1",2,2.0f),
-                new ConversationEntry("intro.girl.pin_good",ConversationEntry.EntryType.End, 2, null, "",-1,0),
+                new ConversationEntry("intro.girl.pin_good",ConversationEntry.EntryType.Event, 1, null, "intro.girl_yes_cash",2,0),
+                new ConversationEntry("intro.girl.pin_good",ConversationEntry.EntryType.Text, 2, "CounterGirl", "intro.girl_pin_good_1",3,2.0f),
+                new ConversationEntry("intro.girl.pin_good",ConversationEntry.EntryType.End, 3, null, "",-1,0),
 
 
                 new ConversationEntry("intro.girl.else",ConversationEntry.EntryType.Start, 0, null,"",1,0.5f),

@@ -74,8 +74,10 @@ namespace Fate {
             destroyTimer -= Time.deltaTime;
             if (destroyTimer<0)
             {
-                GameObject.Find("Hero_Item1").GetComponent<SkinnedMeshRenderer>().sharedMesh = null;
-                GameObject.Find("Hero_Item2").GetComponent<SkinnedMeshRenderer>().sharedMesh = null;
+                if (GameObject.Find("Hero_Item1")!=null)
+                    GameObject.Find("Hero_Item1").GetComponent<SkinnedMeshRenderer>().sharedMesh = null;
+                if (GameObject.Find("Hero_Item2")!=null)
+                    GameObject.Find("Hero_Item2").GetComponent<SkinnedMeshRenderer>().sharedMesh = null;
             }
 
 

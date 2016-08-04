@@ -7,6 +7,7 @@ namespace Fate {
 		public Camera introCamera;
 		public Camera gameCamera;
 		public Camera copCamera;
+        public Camera sideCamera;
 
 
 		// Use this for initialization
@@ -29,6 +30,14 @@ namespace Fate {
 				gameCamera.gameObject.SetActive (true);
 				copCamera.gameObject.SetActive (false);
 			}
+            if (name == "ZoneSideStreet") {
+                gameCamera.gameObject.SetActive (false);
+                sideCamera.gameObject.SetActive (true);
+            }
+            if (name == "ZoneLeaveSideStreet") {
+                gameCamera.gameObject.SetActive (true);
+                sideCamera.gameObject.SetActive (false);
+            }
 		}
 	}
 }

@@ -26,7 +26,7 @@ namespace Fate {
         public Camera shopPinCamera;
 
         public GameObject hero;
-		public GameObject truck;
+
 		// Use this for initialization
 		float lifetime = 0;
 
@@ -45,8 +45,8 @@ namespace Fate {
 			switch (state) {
 			case State.Intro:
 				if (lifetime > 3.5) {
-					if (!truck.GetComponent<Animation>().isPlaying)
-						truck.GetComponent<Animation> ().Play ();
+                        if (!GameObject.Find("TruckAnimRoot").GetComponent<Animation>().isPlaying)
+                            GameObject.Find("TruckAnimRoot").GetComponent<Animation> ().Play ();
 				}
 				if (lifetime > 8) {
 					startCamera.gameObject.SetActive(false);
@@ -327,7 +327,7 @@ namespace Fate {
 						hero.SetActive (false);
 						hero.GetComponent<Hero> ().Deselect ();
 
-						truck.GetComponent<Animation> ().Play ("leave_gas_station");
+                        GameObject.Find("TruckAnimRoot").GetComponent<Animation> ().Play ("leave_gas_station2");
                         lifetime = 0;
 					}
 				}

@@ -42,6 +42,10 @@ namespace Fate {
 
 		public virtual void OnHeroEnterZone(string name) 
 		{
+            foreach (var sw in GameObject.Find("CameraHelpers").GetComponentsInChildren<CameraSwitch>())
+            {
+                sw.OnHeroEnterZone(name);
+            }
 		}
 
         public virtual bool OnActionIntended(Interactable.Action action, GameObject obj)

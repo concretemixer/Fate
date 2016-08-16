@@ -10,6 +10,7 @@
 		Tags { "RenderType"="Transparent" }
 		LOD 100
 		Blend One One
+                Cull Off
 		ZWrite Off
 		Offset 0,-1
 

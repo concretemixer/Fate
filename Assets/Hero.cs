@@ -193,29 +193,7 @@ namespace Fate {
                     else
                     {
                         actionsPanel.SetActive(true);
-
-                        Vector3 menuPos = selected.transform.position;
-                        foreach (Transform child in selected.transform)
-                        {
-                            if (child.gameObject.tag == "MenuPoint")
-                            {
-                                menuPos = child.transform.position;
-                            }
-                        }
-
-                        Vector3 screenPos = camera.WorldToScreenPoint(menuPos);
-                        actionsPanel.GetComponent<RectTransform>().anchoredPosition = screenPos;
-
-                        Interactable.Action[] acts = selected.GetComponent<Interactable>().Actions;
-                        int i = 0;
-                        foreach (Button b in actionsPanel.GetComponentsInChildren<Button>(true))
-                        {
-                            b.gameObject.SetActive(i < acts.Length);
-                            if (i < acts.Length)
-                                b.GetComponentInChildren<Text>().text = acts[i].ToString();
-                            i++;
-                        }
-                        actionsPanel.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, acts.Length * 40 + 20);
+                        actionsPanel.GetComponent<ActionsPanel>().ShowOn(selected);
                     }
 				} else {
 					actionsPanel.SetActive (false);
@@ -264,13 +242,7 @@ namespace Fate {
             GetComponent<NavMeshAgent>().speed = d > 10 ? 5 : 2;
             intendedAction = act;
 
-        }
-
-		public void OnActionSelected(int idx)
-		{
-			Interactable.Action[] acts = selected.GetComponent<Interactable> ().Actions;
-            OnActionSelected( acts[idx]);		
-		}
+        }            	
 
         public void OnInventorySelected()
         {

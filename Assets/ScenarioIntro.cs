@@ -286,7 +286,7 @@ namespace Fate {
 
 		public override void OnAction(Interactable.Action action, GameObject obj)
 		{
-			//Debug.Log ("doing " + action.ToString() + " on "+ obj.name);			
+			Debug.Log ("doing " + action.ToString() + " on "+ obj.name);			
             if (obj.name.StartsWith("Pin_") && shopPinCamera.isActiveAndEnabled)
             {
                 string digit = obj.name.Replace("Pin_","")+"... ";

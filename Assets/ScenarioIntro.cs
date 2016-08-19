@@ -151,12 +151,7 @@ namespace Fate {
                 {
                     SayToSelf(locale.GetRandomText("intro.fuel_guy_look", 1));
                     return false;
-                }
-                if (action == Interactable.Action.Use)
-                {
-                    SayToSelf(locale.GetRandomText("intro.fuel_guy_use", 3));
-                    return false;
-                }
+                }               
             }
             if (obj.name == "Biker")
             {
@@ -231,9 +226,9 @@ namespace Fate {
                     if (vendingBroken)
                         SayToSelf(locale.GetText("intro.vending_look"));
                     else
-                        SayToSelf(locale.GetText("intro.vending_bloken"));
+                        SayToSelf(locale.GetText("intro.vending_broken"));
                 }
-                if (action == Interactable.Action.Use)
+                if (action == Interactable.Action.UseItem)
                 {
                     if (hero.GetComponent<Hero>().Tool == "credit_card")
                     {
@@ -253,20 +248,19 @@ namespace Fate {
             {
                 if (action == Interactable.Action.Use)
                 {
-                    if (string.IsNullOrEmpty(hero.GetComponent<Hero>().Tool))
-                    {
                         if (pinFailCount == 0)
                         {
                             SayToSelf(locale.GetRandomText("intro.dumpster_use", 2));
                             return false;
-                        }
-                    }
-                    else
-                    {
+                        }                                      
+                }
+                if (action == Interactable.Action.UseItem)
+                {
                         SayToSelf(locale.GetRandomText("intro.dumpster_no_waste", 2));
                         return false;
-                    }
+                    
                 }
+
             }
             if (obj.name == "WallBox")
             {
@@ -402,7 +396,7 @@ namespace Fate {
             if (obj.name == "WallBox")
             {
 
-				if (action == Interactable.Action.Use) {
+				if (action == Interactable.Action.UseItem) {
 
                     if (hero.GetComponent<Hero>().Tool == "drink")
                     {
@@ -429,7 +423,10 @@ namespace Fate {
 
                         hero.GetComponent<Hero>().RemoveItem("drink", true, 6);
                     }
-                    else
+                }
+
+                if (action == Interactable.Action.Use)
+                {
                     {
                         foreach (var c in obj.GetComponentsInChildren<ParticleSystem>())
                         {
@@ -445,7 +442,7 @@ namespace Fate {
 			}
             if (obj.name == "VendingMachine")
             {
-                if (action == Interactable.Action.Use)
+                if (action == Interactable.Action.UseItem)
                 {
                     if (hero.GetComponent<Hero>().Tool == "cash")
                     {
@@ -461,12 +458,13 @@ namespace Fate {
                         obj.GetComponent<Animation>().Play("break_vending");
                         //obj.transform.FindChild("Glass").GetComponent<MeshRenderer>().enabled = true;
                     }
-                    else
-                    {
-                        obj.GetComponent<Animation>().Play();
-                        hero.GetComponent<Animator>().SetBool("Kick_t", true);
-                    }
                 }
+                if (action == Interactable.Action.Use)
+                {
+                    obj.GetComponent<Animation>().Play();
+                    hero.GetComponent<Animator>().SetBool("Kick_t", true);
+                }
+                
             }
             if (obj.name == "CounterGirl")
             {
@@ -477,56 +475,66 @@ namespace Fate {
 					state = Scenario.State.Interlude;
                 }
 
-				if (action == Interactable.Action.Use) {
+                if (action == Interactable.Action.Use)
+                {
+                    if (!truckFueled)
+                    {
+                        conversation.StartDialog("intro.girl.fueled");
+                    }
+                    else if (!fuelPaid)
+                    {
+                        conversation.StartDialog("intro.girl.fueled");                        
+                    }
+                    else
+                    {
+                        conversation.StartDialog("intro.girl.else");
+                        
+                    }
+                    state = Scenario.State.Interlude;
+                }
+
+
+				if (action == Interactable.Action.UseItem) {
                     if (!truckFueled)
                     {
                         conversation.StartDialog("intro.girl.not_fueled");
-                        state = Scenario.State.Interlude;
+                        
                     }
                     else if (!fuelPaid)
                     {
                         string tool = hero.GetComponent<Hero>().Tool;
-                        if (string.IsNullOrEmpty(tool))
-                        {
-                            conversation.StartDialog("intro.girl.fueled");
-                            state = Scenario.State.Interlude;
-                        }
-                        else if (tool == "credit_card")
+                        if (tool == "credit_card")
                         {
                             hero.GetComponent<Animator> ().SetBool("Give_t", true);
                             conversation.StartDialog("intro.girl.enter_pin");
-                            state = Scenario.State.Interlude;
+                            
                         }
                         else if (tool == "cash")
                         {
                             hero.GetComponent<Animator> ().SetBool("Give_t", true);
                             conversation.StartDialog("intro.girl.no_cash");
-                            state = Scenario.State.Interlude;
+                            
                         }
                         else if (tool == "cash_big")
                         {
                             hero.GetComponent<Animator>().SetBool("Give_t", true);
-                            conversation.StartDialog("intro.girl.cash_ok");
-                            state = Scenario.State.Interlude;
+                            conversation.StartDialog("intro.girl.cash_ok");                        
+
                             fuelPaid = true;
                         }
                         else
                         {
                             hero.GetComponent<Animator> ().SetBool("Give_t", true);
                             conversation.StartDialog("intro.girl.what");
-                            state = Scenario.State.Interlude;
+                        
                         }
-
-/*
-
-*/
-//						fuelPaid = true;
                     }
                     else
                     {
                         conversation.StartDialog("intro.girl.else");
-                        state = Scenario.State.Interlude;                    
+                        
                     }
+                    state = Scenario.State.Interlude;
 				}
             }
 		}

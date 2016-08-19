@@ -193,7 +193,7 @@ namespace Fate {
                     else
                     {
                         actionsPanel.SetActive(true);
-                        actionsPanel.GetComponent<ActionsPanel>().ShowOn(selected);
+                        actionsPanel.GetComponent<ActionsPanel>().ShowOn(selected, this);
                     }
 				} else {
 					actionsPanel.SetActive (false);

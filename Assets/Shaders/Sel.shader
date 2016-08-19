@@ -7,7 +7,7 @@
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Transparent" }
+		Tags {"Queue" = "Overlay" }
 		LOD 100
 		Blend One One
                 Cull Off
@@ -48,7 +48,7 @@
 				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
 				//o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				o.uv.x =  0.5+0.5*_SinTime.w;
-				o.uv.y = v.vertex.y * 0.33;
+				o.uv.y = v.vertex.y * 0.5;
 				o.color.x = 1-v.normal.y*0.8;
 				o.color.y = 1-v.normal.y*0.8;
 				o.color.z = 1-v.normal.y*0.8;

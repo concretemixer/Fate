@@ -76,6 +76,7 @@ namespace Fate {
 			if (name == "ZoneGameCamera") {
 				gameCamera.gameObject.SetActive (true);
 				sideCamera.gameObject.SetActive (false);
+              //  GameObject.Find("Canvas").GetComponent<Canvas>()
 			}
             if (name == "ZoneShopExit")
             {

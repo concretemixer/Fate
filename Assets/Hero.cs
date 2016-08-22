@@ -33,7 +33,7 @@ namespace Fate {
 		public  GameObject actionsPanel;
         public  GameObject inventoryList;
 
-        System.Collections.Generic.List<string> inventory =  new System.Collections.Generic.List<string>() { "none", "cash","credit_card" };
+        System.Collections.Generic.List<string> inventory =  new System.Collections.Generic.List<string>() { "none", "cash","credit_card","crowbar", "drink" };
 		// Use this for initialization
 
 
@@ -53,6 +53,7 @@ namespace Fate {
                     {
                         GameObject g = GameObject.Instantiate(go, new Vector3(1000, 1000, 1000), Quaternion.identity) as GameObject;
                         g.name = "ItemTemplate_" + s;
+                        g.layer = 9;
                     }               
                 }
             }
@@ -250,6 +251,8 @@ namespace Fate {
                 tool = null;
             else
                 tool = inventoryList.GetComponent<Dropdown>().options[inventoryList.GetComponent<Dropdown>().value].text;
+
+            inventoryList.GetComponent<InventoryPanel>().OnSelectItem(tool);
         }
 
         public void TakeItem(string item) 

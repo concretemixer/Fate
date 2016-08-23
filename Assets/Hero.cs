@@ -255,10 +255,12 @@ namespace Fate {
             inventoryList.GetComponent<InventoryPanel>().OnSelectItem(tool);
         }
 
-        public void TakeItem(string item) 
+        public void TakeItem(string item, float delay) 
         {
             inventory.Add(item);
             UpdateInventory();
+
+            inventoryList.GetComponent<InventoryPanel>().OnTakeItem(item, delay);
         }
 
         public void RemoveItem(string item, bool destroy, float destroyTimer)

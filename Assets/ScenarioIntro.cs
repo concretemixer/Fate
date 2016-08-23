@@ -51,6 +51,9 @@ namespace Fate {
 				if (lifetime > 8) {
 					startCamera.gameObject.SetActive(false);
 					gameCamera.gameObject.SetActive (true);
+                    GameObject canvas = GameObject.Find("Canvas");
+                    if (canvas!=null)
+                        canvas.GetComponent<Canvas>().worldCamera = gameCamera;
 					//sideCamera.gameObject.SetActive (true);
 					state = State.Playing;
 					hero.SetActive (true);
@@ -68,20 +71,15 @@ namespace Fate {
 		}
 
 		public override void OnHeroEnterZone(string name) 
-		{
-			if (name == "ZoneSideCamera") {
-				gameCamera.gameObject.SetActive (false);
-				sideCamera.gameObject.SetActive (true);
-			}
-			if (name == "ZoneGameCamera") {
-				gameCamera.gameObject.SetActive (true);
-				sideCamera.gameObject.SetActive (false);
-              //  GameObject.Find("Canvas").GetComponent<Canvas>()
-			}
+		{			
             if (name == "ZoneShopExit")
             {
                 gameCamera.gameObject.SetActive(true);
                 shopCamera.gameObject.SetActive(false);
+
+                GameObject canvas = GameObject.Find("Canvas");
+                if (canvas!=null)
+                    canvas.GetComponent<Canvas>().worldCamera = gameCamera;
 
                 hero.GetComponent<NavMeshAgent>().enabled = false;
                 hero.transform.position = GameObject.Find("ShopExitStart").transform.position;
@@ -108,6 +106,8 @@ namespace Fate {
                 GameObject.Find("BloodSpill").transform.position = hero.transform.position;
                 GameObject.Find("BloodSpill").GetComponentInChildren<ParticleSystem>().Play();
             }
+
+            base.OnHeroEnterZone(name);
 		}
 
 		GameObject fuelGuy;
@@ -360,7 +360,7 @@ namespace Fate {
                 if (action == Interactable.Action.Use)
                 {
                     hero.GetComponent<Animator>().SetBool("Give_t", true);
-                    hero.GetComponent<Hero>().TakeItem("crowbar");                    
+                    hero.GetComponent<Hero>().TakeItem("crowbar",2);                    
                 }
             }
 
@@ -382,6 +382,10 @@ namespace Fate {
                 {
                     shopCamera.gameObject.SetActive(true);
                     gameCamera.gameObject.SetActive(false);
+
+                    GameObject canvas = GameObject.Find("Canvas");
+                    if (canvas!=null)
+                        canvas.GetComponent<Canvas>().worldCamera = shopCamera;
 
                     hero.GetComponent<NavMeshAgent>().enabled = false;
                     hero.transform.position = GameObject.Find("ShopEnterStart").transform.position;
@@ -448,13 +452,13 @@ namespace Fate {
                     if (hero.GetComponent<Hero>().Tool == "cash")
                     {
                         hero.GetComponent<Animator>().SetBool("Give_t", true);
-                        hero.GetComponent<Hero>().TakeItem("drink");
+                        hero.GetComponent<Hero>().TakeItem("drink",1.5f);
                     }
                     else if (hero.GetComponent<Hero>().Tool == "crowbar")
                     {
                         //obj.GetComponent<Animation>().Play();
                         hero.GetComponent<Animator>().SetBool("Open_t", true);
-                        hero.GetComponent<Hero>().TakeItem("cash_big");
+                        hero.GetComponent<Hero>().TakeItem("cash_big",3.5f);
                         vendingBroken = true;
                         obj.GetComponent<Animation>().Play("break_vending");
                         //obj.transform.FindChild("Glass").GetComponent<MeshRenderer>().enabled = true;

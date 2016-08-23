@@ -54,7 +54,25 @@ namespace Fate {
                 b.gameObject.SetActive(false);
             }
 
+            int cnt = 0;
+            foreach (var act in acts)
+            {
+                if (act == Interactable.Action.Use)
+                {
+                    if (!string.IsNullOrEmpty(hero.Tool))
+                        continue;
+                }
+                if (act == Interactable.Action.UseItem)
+                {
+                    if (string.IsNullOrEmpty(hero.Tool))
+                        continue;
+                }
+                cnt++;
+            }
+
             int x = 0, y = 0, w = 96;                        
+
+            x -= ((cnt - 1) * w)/2;
 
             foreach (var act in acts)                       
             {
@@ -79,7 +97,7 @@ namespace Fate {
                 }
             }
 
-            screenPos.x -= (x-96) / 2;
+            //screenPos.x -= (x-96) / 2;
             GetComponent<RectTransform>().anchoredPosition = screenPos;
 
 

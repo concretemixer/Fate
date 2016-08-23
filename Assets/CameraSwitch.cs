@@ -24,6 +24,10 @@ public class CameraSwitch : MonoBehaviour {
                 go.SetActive(false);
 
             onCamera.gameObject.SetActive(true);
+
+            GameObject canvas = GameObject.Find("Canvas");
+            if (canvas!=null)
+                canvas.GetComponent<Canvas>().worldCamera = onCamera;
             
         }
     }
